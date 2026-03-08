@@ -55,29 +55,39 @@ response = Dox.Droplets.list!(token: token)
 
 ## Configuration
 
-### Global Token
+### Config-based Token (Recommended)
 
-You can set a default token in your application config:
+You can set your API token in your application config:
 
 ```elixir
 # config/config.exs
-config :dox, :token, System.get_env("DIGITALOCEAN_TOKEN")
+config :dox, api_token: System.get_env("DIGITALOCEAN_TOKEN")
 ```
 
 Then use resources without passing the token each time:
 
 ```elixir
-# Requires config :dox, :token to be set
+# Uses token from config
 {:ok, response} = Dox.Droplets.list()
 ```
 
-### Default Plugins
+### Per-request Token
 
-Configure default plugins in your application config:
+Alternatively, you can pass the token directly to each function:
+
+```elixir
+{:ok, response} = Dox.Droplets.list(token: "your_api_token")
+```
+
+The per-request token takes precedence over the config token if both are set.
+
+### Custom Plugins
+
+Configure custom plugins in your application config:
 
 ```elixir
 # config/config.exs
-config :dox, :plugins, [MyPlugin]
+config :dox, plugins: [MyPlugin]
 ```
 
 ## Available Resources

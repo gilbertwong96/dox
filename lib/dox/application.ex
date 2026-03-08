@@ -10,6 +10,9 @@ defmodule Dox.Application do
 
   @impl true
   def start(_type, _args) do
+    # Initialize plugins via Dox module (lazy initialization)
+    _ = Dox.plugins()
+
     children = [
       {Finch, name: Dox.Finch, pools: %{default: @finch_pool_config}}
     ]

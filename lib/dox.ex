@@ -10,6 +10,22 @@ defmodule Dox do
 
   ## Usage
 
+  There are two ways to authenticate with the DigitalOcean API:
+
+  ### Option 1: Config-based (Recommended)
+
+  Set your API token in your application config:
+
+      # config/config.exs
+      config :dox, api_token: "your_api_token"
+
+  Then use resource functions without passing the token:
+
+      Dox.Droplets.list()
+      Dox.Droplets.get(droplet_id)
+
+  ### Option 2: Per-request token
+
   Pass your API token directly to resource functions:
 
       # List all droplets
@@ -20,6 +36,14 @@ defmodule Dox do
 
       # Or use bang versions that raise on error
       response = Dox.Droplets.list!(token: "your_api_token")
+
+  ## Plugins
+
+  Dox supports plugins that can modify request behavior. Plugins are
+  called in order before each request.
+
+      # Add a custom plugin
+      Dox.add_plugin(MyPlugin)
 
   ## Resources
 
@@ -55,4 +79,49 @@ defmodule Dox do
   - `Dox.Resource.function/1` - Returns `{:ok, response}` or `{:error, error}`
   - `Dox.Resource.function!/1` - Returns response or raises `Dox.Error`
   """
+
+  # Default plugins loaded at compile time
+  @default_plugins [Dox.Plugin.TokenInjector]
+
+  @doc """
+  Returns the list of registered plugins with their state.
+
+  Plugins are initialized lazily on first call and cached in process dictionary.
+  """
+  @spec plugins() :: [{module(), term()}]
+  def plugins do
+    Process.get({:dox, :plugins}) || init_plugins()
+  end
+
+  defp init_plugins do
+    # Get plugins from app config at runtime
+    plugins =
+      case Application.get_env(:dox, :plugins) do
+        nil -> @default_plugins
+        list when is_list(list) -> list
+        _ -> @default_plugins
+      end
+      |> Enum.map(fn module ->
+        {:ok, state} = module.init([])
+        {module, state}
+      end)
+
+    Process.put({:dox, :plugins}, plugins)
+    plugins
+  end
+
+  @doc """
+  Adds a plugin to the registry.
+
+  ## Examples
+
+      Dox.add_plugin(Dox.Plugin.TokenInjector)
+  """
+  @spec add_plugin(module()) :: :ok
+  def add_plugin(module) do
+    {:ok, state} = module.init([])
+    current = Process.get({:dox, :plugins}) || []
+    Process.put({:dox, :plugins}, [{module, state} | current])
+    :ok
+  end
 end
