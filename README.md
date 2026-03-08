@@ -2,8 +2,8 @@
 
 [![Hex](https://img.shields.io/hexpm/v/dox.svg)](https://hex.pm/packages/dox)
 [![Documentation](https://img.shields.io/badge/hexdocs-latest-blue.svg)](https://hexdocs.pm/dox)
-[![CI](https://github.com/gilbertwong/dox/workflows/CI/badge.svg)](https://github.com/gilbertwong/dox/actions)
-[![Coverage](https://coveralls.io/repos/github/gilbertwong/dox/badge.svg?branch=master)](https://coveralls.io/github/gilbertwong/dox?branch=master)
+[![CI](https://github.com/gilbertwong96/dox/workflows/CI/badge.svg)](https://github.com/gilbertwong96/dox/actions)
+[![Coverage](https://coveralls.io/repos/github/gilbertwong96/dox/badge.svg?branch=main)](https://coveralls.io/github/gilbertwong96/dox?branch=main)
 
 Dox is an Elixir library for interacting with the [DigitalOcean API v2](https://docs.digitalocean.com/reference/api/api-reference/). It provides a clean, idiomatic Elixir interface for managing DigitalOcean resources.
 
