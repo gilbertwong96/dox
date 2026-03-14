@@ -13,7 +13,7 @@ Dox is an Elixir library for interacting with the [DigitalOcean API v2](https://
 - **Plugin System** - Extend request behavior with custom plugins for retry logic, logging, caching, metrics, etc.
 - **Type-safe Responses** - Returns structured response objects with type specifications
 - **Error Handling** - Comprehensive error handling with detailed error information
-- **HTTP Client** - Built on top of [Finch](https://hexdocs.pm/finch/readme.html) for reliable HTTP requests
+- **HTTP Client** - Built on top of [Finch](https://hexdocs.pm/finch/Finch.html) for reliable HTTP requests
 - **OTP Application** - Supervised HTTP connection pools for production use
 
 ## Installation

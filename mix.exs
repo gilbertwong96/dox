@@ -11,7 +11,19 @@ defmodule Dox.MixProject do
       aliases: aliases(),
       deps: deps(),
       docs: docs(),
+      package: package(),
       test_coverage: [tool: ExCoveralls, minimum_coverage: 15]
+    ]
+  end
+
+  defp package do
+    [
+      description: "DigitalOcean API v2 client for Elixir",
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => "https://github.com/gilbertwong96/dox",
+        "Docs" => "https://hexdocs.pm/dox"
+      }
     ]
   end
 
