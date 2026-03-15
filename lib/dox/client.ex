@@ -22,7 +22,7 @@ defmodule Dox.Client do
   def request(method, path, opts \\ []) do
     token = Keyword.get(opts, :token) || raise_token_error()
     params = Keyword.get(opts, :params, %{})
-    body = Keyword.get(opts, :body)
+    body = build_body(method, opts)
 
     url = build_url(path, params)
 
@@ -92,6 +92,15 @@ defmodule Dox.Client do
   def delete!(path, opts \\ []), do: request!(:delete, path, opts)
 
   # Private helpers
+
+  defp build_body(method, opts) when method in [:post, :put, :patch] do
+    opts
+    |> Keyword.drop([:token, :params, :receive_timeout, :connect_timeout])
+    |> Enum.into(%{})
+    |> then(fn m -> if map_size(m) > 0, do: m, else: nil end)
+  end
+
+  defp build_body(_method, _opts), do: nil
 
   defp build_url(path, params) do
     query_string = URI.encode_query(params)

@@ -3,25 +3,45 @@ defmodule Dox.Response do
   Response wrapper for DigitalOcean API responses.
   """
 
-  defstruct [:body, :headers, :status_code, :request]
+  defstruct [:body, :status_code, :rate_limit, :rate_remaining, :rate_reset]
 
   @type t :: %__MODULE__{
           body: map(),
-          headers: [{String.t(), String.t()}],
           status_code: non_neg_integer(),
-          request: map()
+          rate_limit: non_neg_integer() | nil,
+          rate_remaining: non_neg_integer() | nil,
+          rate_reset: integer() | nil
         }
 
   @doc """
-  Creates a new response struct.
+  Creates a new response struct with rate limit info extracted from headers.
+  Headers are processed internally but not exposed to users.
   """
-  def new(body, headers, status_code, request \\ %{}) do
+  def new(body, headers, status_code, _request \\ %{}) do
     %__MODULE__{
       body: body,
-      headers: headers,
       status_code: status_code,
-      request: request
+      rate_limit: get_header(headers, "ratelimit-limit") |> parse_int(),
+      rate_remaining: get_header(headers, "ratelimit-remaining") |> parse_int(),
+      rate_reset: get_header(headers, "ratelimit-reset") |> parse_int()
     }
+  end
+
+  defp get_header(headers, key) do
+    case List.keyfind(headers, key, 0) do
+      nil -> nil
+      {_, value} -> value
+    end
+  end
+
+  defp parse_int(nil), do: nil
+  defp parse_int(""), do: nil
+
+  defp parse_int(value) do
+    case Integer.parse(value) do
+      {int, _} -> int
+      :error -> nil
+    end
   end
 
   @doc """
@@ -57,5 +77,26 @@ defmodule Dox.Response do
   """
   def error?(%__MODULE__{status_code: status}) do
     status >= 400
+  end
+
+  @doc """
+  Returns rate limit information.
+  """
+  def rate_limit_info(%__MODULE__{} = response) do
+    %{
+      limit: response.rate_limit,
+      remaining: response.rate_remaining,
+      reset: response.rate_reset
+    }
+  end
+
+  @doc """
+  Checks if the response is near the rate limit threshold.
+  """
+  def near_rate_limit?(%__MODULE__{} = response, threshold \\ 100) do
+    case response.rate_remaining do
+      nil -> false
+      remaining -> remaining <= threshold
+    end
   end
 end

@@ -1,4 +1,6 @@
-# Dox
+# Dox (Experimental)
+
+> ⚠️ **This project is in early experimental stage. APIs may change.**
 
 [![Hex](https://img.shields.io/hexpm/v/dox.svg)](https://hex.pm/packages/dox)
 [![Documentation](https://img.shields.io/badge/hexdocs-latest-blue.svg)](https://hexdocs.pm/dox)

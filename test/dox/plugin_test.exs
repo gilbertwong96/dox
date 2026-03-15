@@ -252,7 +252,6 @@ defmodule Dox.PluginTest do
     test "returns ok tuple with response and state" do
       response = %Dox.Response{
         status_code: 200,
-        headers: [],
         body: %{}
       }
 
@@ -264,7 +263,6 @@ defmodule Dox.PluginTest do
     test "response modifying plugin returns modified response" do
       response = %Dox.Response{
         status_code: 200,
-        headers: [],
         body: %{original: true}
       }
 
@@ -293,7 +291,6 @@ defmodule Dox.PluginTest do
 
       response = %Dox.Response{
         status_code: 200,
-        headers: [],
         body: %{}
       }
 
@@ -324,7 +321,7 @@ defmodule Dox.PluginTest do
       assert returned_request == request
       assert state == %{key: "value"}
 
-      response = %Dox.Response{status_code: 200, headers: [], body: %{}}
+      response = %Dox.Response{status_code: 200, body: %{}}
 
       assert {:ok, ^response, state} =
                UsingPlugin.after_response(response, %{key: "value"}, request)
