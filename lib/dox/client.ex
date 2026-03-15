@@ -20,6 +20,8 @@ defmodule Dox.Client do
   Makes an HTTP request to the DigitalOcean API.
   """
   def request(method, path, opts \\ []) do
+    opts = normalize_opts(opts)
+
     token = Keyword.get(opts, :token) || raise_token_error()
     params = Keyword.get(opts, :params, %{})
     body = build_body(method, opts)
@@ -92,6 +94,13 @@ defmodule Dox.Client do
   def delete!(path, opts \\ []), do: request!(:delete, path, opts)
 
   # Private helpers
+
+  # Convert map to keyword list for compatibility
+  defp normalize_opts(opts) when is_map(opts) do
+    Enum.map(opts, fn {k, v} -> {k, v} end)
+  end
+
+  defp normalize_opts(opts), do: opts
 
   defp build_body(method, opts) when method in [:post, :put, :patch] do
     opts
