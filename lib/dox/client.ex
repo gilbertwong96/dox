@@ -14,11 +14,13 @@ defmodule Dox.Client do
   Returns the HTTP client module to use for API requests.
   Can be overridden via application env for testing.
   """
+  @spec http_client() :: module()
   def http_client, do: Application.get_env(:dox, :http_client, __MODULE__)
 
   @doc """
   Makes an HTTP request to the DigitalOcean API.
   """
+  @spec request(atom(), String.t(), keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
   def request(method, path, opts \\ []) do
     opts = normalize_opts(opts)
 

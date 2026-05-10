@@ -21,6 +21,7 @@ defmodule Dox.Projects do
 
     Dox.Projects.list(token: "your_token")
   """
+  @spec list(keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
   def list(opts \\ []) do
     Request.request(:get, "/v2/projects", opts)
   end
@@ -207,6 +208,7 @@ defmodule Dox.Projects do
 
     Dox.Projects.assign_resources("4e1bfbc3-dc3e-41f2-a18f-1b4d7ba71679", resources: ["do:droplet:1", "do:floatingip:192.168.99.100"], token: "your_token")
   """
+  @spec assign_resources(String.t(), keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
   def assign_resources(project_id, opts \\ []) do
     Request.request(:post, "/v2/projects/#{project_id}/resources", opts)
   end

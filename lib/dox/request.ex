@@ -17,6 +17,7 @@ defmodule Dox.Request do
   Before making the request, all registered plugins have their
   `before_request/2` callback called to modify the request options.
   """
+  @spec request(atom(), String.t(), keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
   def request(method, path, opts \\ []) do
     opts = run_plugins(method, path, opts)
     Dox.Client.http_client().request(method, path, opts)

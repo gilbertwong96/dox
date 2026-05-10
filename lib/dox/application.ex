@@ -5,16 +5,16 @@ defmodule Dox.Application do
 
   use Application
 
-  @default_finch_pool_config [size: 1, protocols: [:http2]]
-  @finch_pool_config Application.compile_env(:dox, :finch_pool, @default_finch_pool_config)
+  @default_finch_pool_config [size: 5, pool_max_idle_time: 60_000, protocols: [:http1, :http2]]
 
   @impl true
   def start(_type, _args) do
-    # Initialize plugins via Dox module (lazy initialization)
     _ = Dox.plugins()
 
+    pool_config = Application.get_env(:dox, :finch_pool, @default_finch_pool_config)
+
     children = [
-      {Finch, name: Dox.Finch, pools: %{default: @finch_pool_config}}
+      {Finch, name: Dox.Finch, pools: %{default: pool_config}}
     ]
 
     opts = [strategy: :one_for_one, name: Dox.Supervisor]

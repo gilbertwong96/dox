@@ -31,6 +31,7 @@ defmodule Dox.Droplets do
   ## Response
   Returns `%Dox.Response{}` with a `droplets` array containing Droplet objects.
   """
+  @spec list(keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
   def list(opts \\ []) do
     Request.request(:get, "/v2/droplets", opts)
   end
@@ -71,6 +72,7 @@ defmodule Dox.Droplets do
   ## Response
   Returns `%Dox.Response{}` with the created Droplet object. Response code is 202 Accepted.
   """
+  @spec create(keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
   def create(opts \\ []) do
     Request.request(:post, "/v2/droplets", opts)
   end
@@ -100,6 +102,7 @@ defmodule Dox.Droplets do
   ## Response
   Returns `%Dox.Response{}` with the Droplet object containing standard attributes like id, name, region, size, status, etc.
   """
+  @spec get(non_neg_integer(), keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
   def get(droplet_id, opts \\ []) do
     Request.request(:get, "/v2/droplets/#{droplet_id}", opts)
   end
@@ -461,9 +464,7 @@ defmodule Dox.Droplets do
   Returns `%Dox.Response{}` with 204 status code on success.
   """
   def delete_by_tag(tag_name, opts \\ []) do
-    Request.request(:delete, "/v2/droplets",
-      opts: Keyword.put(opts, :params, %{tag_name: tag_name})
-    )
+    Request.request(:delete, "/v2/droplets", Keyword.put(opts, :params, %{tag_name: tag_name}))
   end
 
   @doc """
@@ -524,8 +525,10 @@ defmodule Dox.Droplets do
   Returns `%Dox.Response{}` with a `droplets` array containing neighbor Droplet objects.
   """
   def neighbor_ids(droplet_id, opts \\ []) do
-    Request.request(:get, "/v2/droplets/#{droplet_id}/neighbors",
-      opts: Keyword.put(opts, :params, %{per_page: 200})
+    Request.request(
+      :get,
+      "/v2/droplets/#{droplet_id}/neighbors",
+      Keyword.put(opts, :params, %{per_page: 200})
     )
   end
 
@@ -562,9 +565,7 @@ defmodule Dox.Droplets do
   Returns `%Dox.Response{}` with the created Droplet objects. Response code is 202 Accepted.
   """
   def create_by_tag(tag_name, opts \\ []) do
-    Request.request(:post, "/v2/droplets",
-      opts: Keyword.put(opts, :params, %{tag_name: tag_name})
-    )
+    Request.request(:post, "/v2/droplets", Keyword.put(opts, :params, %{tag_name: tag_name}))
   end
 
   @doc """
