@@ -62,6 +62,7 @@ defmodule Dox do
   - `Dox.Images` - Images
   - `Dox.Kubernetes` - Kubernetes clusters
   - `Dox.LoadBalancers` - Load balancers
+  - `Dox.Monitoring` - Monitoring metrics (bandwidth, CPU, disk, etc.)
   - `Dox.OneClicks` - 1-Click apps
   - `Dox.Projects` - Projects
   - `Dox.Regions` - Regions
