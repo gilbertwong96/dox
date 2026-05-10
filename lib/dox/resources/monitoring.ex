@@ -107,7 +107,8 @@ defmodule Dox.Monitoring do
     - `end` - Unix timestamp for the end of the metrics window (required)
     - `token` - Your DigitalOcean API token
   """
-  @spec get_droplet_cpu(non_neg_integer(), keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
+  @spec get_droplet_cpu(non_neg_integer(), keyword()) ::
+          {:ok, Dox.Response.t()} | {:error, term()}
   def get_droplet_cpu(droplet_id, opts \\ []) do
     params = %{
       "host_id" => droplet_id,
@@ -122,18 +123,19 @@ defmodule Dox.Monitoring do
   end
 
   @doc """
-  Get Droplet Memory Metrics.
+  Get Droplet Available Memory Metrics.
 
-  To retrieve memory metrics for a given droplet, send a GET request to
-  `/v2/monitoring/metrics/droplet/memory_free`.
+  To retrieve available memory metrics for a given droplet, send a GET request to
+  `/v2/monitoring/metrics/droplet/memory_available`.
 
-  Returns free memory in bytes.
+  Returns available memory in bytes (free + reclaimable cache).
 
   ## Parameters
   - `droplet_id` - The ID of the Droplet
   - `opts` - Optional parameters: `start`, `end`, `token`
   """
-  @spec get_droplet_memory(non_neg_integer(), keyword()) :: {:ok, Dox.Response.t()} | {:error, term()}
+  @spec get_droplet_memory(non_neg_integer(), keyword()) ::
+          {:ok, Dox.Response.t()} | {:error, term()}
   def get_droplet_memory(droplet_id, opts \\ []) do
     params = %{
       "host_id" => droplet_id,
@@ -141,7 +143,7 @@ defmodule Dox.Monitoring do
       "end" => Keyword.get(opts, :end)
     }
 
-    Request.request(:get, "/v2/monitoring/metrics/droplet/memory_free",
+    Request.request(:get, "/v2/monitoring/metrics/droplet/memory_available",
       token: Keyword.get(opts, :token),
       params: params
     )
